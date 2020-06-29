@@ -39,7 +39,7 @@ We will explore option number 2, exporting the images directly from Revit.
 Implementation:
 
 - Pick an element
-- Ttake a picture of it from multiple angles (sides, top, ...)
+- Take a picture of it from multiple angles (sides, top, ...)
 - Save to PNG file
 - Include ability to select other, non-family-instances, elements as well (pipes, ...).
 - Use the object dimension to select the distance from the element to use (currently, just taking its bounding box is enough).
