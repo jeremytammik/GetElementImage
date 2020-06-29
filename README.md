@@ -41,8 +41,8 @@ Implementation:
 - Pick an element
 - Take a picture of it from multiple angles (sides, top, ...)
 - Save to PNG file
-- Include ability to select other, non-family-instances, elements as well (pipes, ...).
-- Use the object dimension to select the distance from the element to use (currently, just taking its bounding box is enough).
+- Include ability to select other, non-family-instances, elements as well (pipes, ...)
+- Use the object dimension to select the distance from the element to use (currently, just taking its bounding box is enough)
 
 ## <a name="author"></a>Author
 
