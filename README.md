@@ -44,6 +44,9 @@ Implementation:
 - Include ability to select other, non-family-instances, elements as well (pipes, ...)
 - Use the object dimension to select the distance from the element (currently, just taking its bounding box is enough)
 
+A similar pre-existing implementation was described by Alexander Ignatovich and The Building Coder in the article 
+on [exporting image and setting a default 3D view orientation](https://thebuildingcoder.typepad.com/blog/2013/08/setting-a-default-3d-view-orientation.html).
+
 ## <a name="author"></a>Author
 
 Jeremy Tammik, [The Building Coder](http://thebuildingcoder.typepad.com), [ADN](http://www.autodesk.com/adn) [Open](http://www.autodesk.com/adnopen), [Autodesk Inc.](http://www.autodesk.com)
