@@ -49,7 +49,7 @@ Existing sample code:
 Some implementation hints have been described by Alexander Ignatovich and The Building Coder in the article 
 on [exporting image and setting a default 3D view orientation](https://thebuildingcoder.typepad.com/blog/2013/08/setting-a-default-3d-view-orientation.html).
 
-Another sample of `ExportImage` option settings is provided in the recent discussion on [Export Image Cutting off Pixels](https://thebuildingcoder.typepad.com/blog/2020/06/creating-material-texture-and-retaining-pixels.html#3).
+Another sample of `ExportImage` option settings is provided in the recent discussion on [export image cutting off pixels](https://thebuildingcoder.typepad.com/blog/2020/06/creating-material-texture-and-retaining-pixels.html#3).
 
 If the background is important, the discussion on [setting the view display background](https://thebuildingcoder.typepad.com/blog/2013/12/setting-the-view-display-background.html) addresses that aspect.
 
