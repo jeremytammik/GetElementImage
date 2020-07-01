@@ -44,6 +44,16 @@ Implementation:
 - Include ability to select other, non-family-instances, elements as well (pipes, ...)
 - Use the object dimension to select the distance from the element (currently, just taking its bounding box is enough)
 
+We use a fixed list to define the angles from which to generate the element views.
+The definition format doesn't really matter. I would go with:
+
+- Distance from element centre (defined by the bounding box).
+- Horizontal angle, 0-360 degrees; 0 means looking North, 180 means looking South. Also might be called "yaw".
+- Vertical angle, -90 to +90 degrees, where 0 means being on the same height as the element centre and 90 means looking from the top. Also might be called "pitch".
+
+In all cases, looking directly at the centre of the element (by bounding box centre).
+
+
 Existing sample code:
 
 Some implementation hints have been described by Alexander Ignatovich and The Building Coder in the article 
