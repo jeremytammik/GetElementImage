@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>GetElementImage</Text>
+    <Description>Export PNG views of a selected BIM element from specified directions</Description>
+    <Assembly>GetElementImage.dll</Assembly>
+    <FullClassName>GetElementImage.Command</FullClassName>
+    <ClientId>fd6e184c-cb21-4a11-8fce-24d60a947a98</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
