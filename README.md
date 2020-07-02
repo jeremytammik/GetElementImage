@@ -53,7 +53,6 @@ The definition format doesn't really matter. I would go with:
 
 In all cases, looking directly at the centre of the element (by bounding box centre).
 
-
 Existing sample code:
 
 Some implementation hints have been described by Alexander Ignatovich and The Building Coder in the article 
@@ -62,6 +61,8 @@ on [exporting image and setting a default 3D view orientation](https://thebuildi
 Another sample of `ExportImage` option settings is provided in the recent discussion on [export image cutting off pixels](https://thebuildingcoder.typepad.com/blog/2020/06/creating-material-texture-and-retaining-pixels.html#3).
 
 If the background is important, the discussion on [setting the view display background](https://thebuildingcoder.typepad.com/blog/2013/12/setting-the-view-display-background.html) addresses that aspect.
+
+[The Building Coder samples]() includes the `CmdExportImage` sample command that exports an image of a view.
 
 ## <a name="author"></a>Author
 

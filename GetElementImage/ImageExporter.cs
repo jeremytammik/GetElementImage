@@ -46,6 +46,9 @@ namespace GetElementImage
 
       Categories cats = doc.Settings.Categories;
 
+      //_category_ids_to_hide.Add( cats.get_Item( // null object
+      //  BuiltInCategory.OST_Cameras ).Id );
+
       _category_ids_to_hide.Add( cats.get_Item( 
         BuiltInCategory.OST_Levels ).Id );
 
@@ -61,12 +64,18 @@ namespace GetElementImage
 
       View view = _views_to_export[ 0 ];
       view.HideCategoriesTemporary( _category_ids_to_hide );
-      FilteredElementCollector visible_elements 
-        = new FilteredElementCollector( doc, view.Id );
-      view.HideElements( visible_elements.ToElementIds() );
+      List<ElementId> hideable_element_ids
+        = new FilteredElementCollector( doc, view.Id )
+          .Where<Element>( a => a.CanBeHidden( view ) )
+          .Select<Element, ElementId>( b => b.Id )
+          .ToList<ElementId>();
+
+      view.HideElements( hideable_element_ids );
       List<ElementId> ids = new List<ElementId>( 1 );
       ids.Add( e.Id );
       view.UnhideElements( ids );
+
+      doc.Regenerate();
 
       var tempFileName = Path.ChangeExtension(
         Path.GetRandomFileName(), "png" );
