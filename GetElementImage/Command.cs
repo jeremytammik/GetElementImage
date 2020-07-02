@@ -104,8 +104,15 @@ namespace GetElementImage
           foreach( ElementId id in ids )
           {
             Element e = doc.GetElement( id );
-            string filename = ie.ExportToImage( e );
-            Debug.Print( "{0}: {1}", e.Id, filename );
+
+            string filepath = ie.ExportToImage( e );
+
+            Debug.Print( "{0}: {1}", e.Id, filepath );
+
+            if( 0 < filepath.Length )
+            {
+              Process.Start( filepath );
+            }
           }
           tx.RollBack();
         }
