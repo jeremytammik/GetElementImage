@@ -1,4 +1,5 @@
 ﻿#region Namespaces
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -81,26 +82,30 @@ namespace GetElementImage
       doc.Regenerate();
 
       //string directory = Path.GetTempPath();
-      string directory = "C:/tmp";
 
-      string tempFileName = Path.ChangeExtension(
-        Path.GetRandomFileName(), "png" );
+      //string tempFileName = Path.ChangeExtension(
+      //  Path.GetRandomFileName(), "png" );
 
-      string tempImageFile;
+      //string tempImageFile;
 
-      try
-      {
-        tempImageFile = Path.Combine(
-          directory, tempFileName );
-      }
-      catch( IOException )
-      {
-        return null;
-      }
+      //try
+      //{
+      //  tempImageFile = Path.Combine(
+      //    directory, tempFileName );
+      //}
+      //catch( IOException )
+      //{
+      //  return null;
+      //}
+
+
+      string dir = "C:/tmp";
+      string fn = e.Id.IntegerValue.ToString();
+      string filepath = $"{dir}/{fn}.png";
 
       var ieo = new ImageExportOptions
       {
-        FilePath = tempImageFile,
+        FilePath = filepath,
         FitDirection = FitDirectionType.Horizontal,
         HLRandWFViewsFileType = ImageFileType.PNG,
         ImageResolution = ImageResolution.DPI_150,
@@ -127,8 +132,8 @@ namespace GetElementImage
       ieo.ZoomType = ZoomFitType.FitToPage;
       ieo.ViewName = "tmp";
 
-      if( ImageExportOptions.IsValidFileName(
-        tempImageFile ) )
+      //if( ImageExportOptions.IsValidFileName(
+      //  tempImageFile ) )
       {
         // If ExportRange = ExportRange.SetOfViews 
         // and document is not active, then image 
@@ -139,15 +144,16 @@ namespace GetElementImage
         {
           doc.ExportImage( ieo );
         }
-        catch
+        catch(Exception ex)
         {
-          return string.Empty;
+          //return string.Empty;
+          Debug.Print( ex.Message );
         }
       }
-      else
-      {
-        return string.Empty;
-      }
+      //else
+      //{
+      //  return string.Empty;
+      //}
 
       // File name has format like 
       // "tempFileName - view type - view name", e.g.
@@ -155,11 +161,8 @@ namespace GetElementImage
       // Get the first image (we only listed one view
       // in views).
 
-      var files = Directory.GetFiles(
-        directory,
-        string.Format( "{0}*.*", Path
-          .GetFileNameWithoutExtension(
-            tempFileName ) ) );
+      var files = Directory.GetFiles( 
+        dir, $"{fn}*.*" );
 
       return files.Length > 0
         ? files[ 0 ]
