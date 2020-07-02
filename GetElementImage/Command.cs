@@ -6,7 +6,6 @@ using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 #endregion
@@ -16,6 +15,7 @@ namespace GetElementImage
   [Transaction( TransactionMode.Manual )]
   public class Command : IExternalCommand
   {
+    #region Element Selection
     /// <summary>
     /// Allow only family instances to be selected.
     /// </summary>
@@ -32,40 +32,31 @@ namespace GetElementImage
       }
     }
 
-
     /// <summary>
     /// Return a single preselected element
     /// or prompt user to select one.
     /// </summary>
-    static Result GetSingleSelectedElement(
+    static Result GetSelectedElements(
       UIDocument uidoc,
       ref string message,
-      out Element e )
+      out ICollection<ElementId> ids )
     {
       Document doc = uidoc.Document;
       Selection sel = uidoc.Selection;
-      ICollection<ElementId> ids = sel.GetElementIds();
+      ids = sel.GetElementIds();
       int n = ids.Count;
 
-      e = null;
-
-      if( 1 == n )
-      {
-        foreach( ElementId id in ids )
-        {
-          e = doc.GetElement( id );
-        }
-      }
-      else if( 0 == n )
+      if( 0 == n )
       {
         try
         {
-          Reference r = sel.PickObject(
+          IList<Reference> refs = sel.PickObjects(
             ObjectType.Element, 
             new FamilyInstanceSelectionFilter(),
-            "Please select element to export its views" );
+            "Please select elements to export their views" );
 
-          e = doc.GetElement( r.ElementId );
+          ids = new List<ElementId>( 
+            refs.Select( r => r.ElementId ) );
         }
         catch( OperationCanceledException )
         {
@@ -74,13 +65,14 @@ namespace GetElementImage
       }
       else
       {
-        message = "Please launch this command with "
-          + "at most one pre-selected element";
+        // check that all pre-selected elements match our criteria
 
-        return Result.Failed;
+        //message = "Invalid pre-selected elements: ...";
+        //return Result.Failed;
       }
       return Result.Succeeded;
     }
+    #endregion // Element Selection
 
     public Result Execute(
       ExternalCommandData commandData,
@@ -91,13 +83,20 @@ namespace GetElementImage
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
-      Element e;
+      ICollection<ElementId> ids;
 
-      Result rc = GetSingleSelectedElement( 
-        uidoc, ref message, out e );
+      Result rc = GetSelectedElements( 
+        uidoc, ref message, out ids );
 
       if( Result.Succeeded == rc )
       {
+        ImageExporter ie = new ImageExporter( doc );
+
+        foreach( ElementId id in ids )
+        {
+          Element e = doc.GetElement( id );
+          string filename = ie.ExportToImage( e );
+        }
       }
 
       FilteredElementCollector col
@@ -106,8 +105,7 @@ namespace GetElementImage
           .OfCategory( BuiltInCategory.INVALID )
           .OfClass( typeof( Wall ) );
 
-
-      return Result.Succeeded;
+      return rc;
     }
   }
 }
