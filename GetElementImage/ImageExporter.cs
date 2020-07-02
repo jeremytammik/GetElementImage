@@ -44,13 +44,21 @@ namespace GetElementImage
     {
       Document doc = e.Document;
 
+      // Get categories to hide
+
+      List<ElementId> catids = new List<ElementId>( 2 );
+      Categories cats = doc.Settings.Categories;
+      catids.Add( cats.get_Item( BuiltInCategory.OST_Levels ).Id );
+      catids.Add( cats.get_Item( BuiltInCategory.OST_ProjectBasePoint ).Id );
+
       // Hide all other elements in view
 
       View view = _views_to_export[ 0 ];
-      FilteredElementCollector visible_elements = new FilteredElementCollector( doc, view.Id );
-      ICollection<ElementId> ids = visible_elements.ToElementIds();
-      view.HideElements( ids );
-      ids.Clear();
+      view.HideCategoriesTemporary( catids );
+      FilteredElementCollector visible_elements 
+        = new FilteredElementCollector( doc, view.Id );
+      view.HideElements( visible_elements.ToElementIds() );
+      List<ElementId> ids = new List<ElementId>( 1 );
       ids.Add( e.Id );
       view.UnhideElements( ids );
 
