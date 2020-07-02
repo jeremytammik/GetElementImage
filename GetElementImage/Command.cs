@@ -17,10 +17,27 @@ namespace GetElementImage
   public class Command : IExternalCommand
   {
     /// <summary>
+    /// Allow only family instances to be selected.
+    /// </summary>
+    class FamilyInstanceSelectionFilter : ISelectionFilter
+    {
+      public bool AllowElement( Element e )
+      {
+        return e is FamilyInstance;
+      }
+
+      public bool AllowReference( Reference r, XYZ p )
+      {
+        return true;
+      }
+    }
+
+
+    /// <summary>
     /// Return a single preselected element
     /// or prompt user to select one.
     /// </summary>
-    public static Result GetSingleSelectedElement(
+    static Result GetSingleSelectedElement(
       UIDocument uidoc,
       ref string message,
       out Element e )
@@ -44,8 +61,9 @@ namespace GetElementImage
         try
         {
           Reference r = sel.PickObject(
-            ObjectType.Element, "Please select element "
-              + "to view in external browser" );
+            ObjectType.Element, 
+            new FamilyInstanceSelectionFilter(),
+            "Please select element to export its views" );
 
           e = doc.GetElement( r.ElementId );
         }
@@ -64,95 +82,6 @@ namespace GetElementImage
       return Result.Succeeded;
     }
 
-    #region Element pre- or post-selection
-    static public ICollection<ElementId> GetSelectedElements(
-      UIDocument uidoc )
-    {
-      // Do we have any pre-selected elements?
-
-      Selection sel = uidoc.Selection;
-
-      ICollection<ElementId> ids = sel.GetElementIds();
-
-      // If no elements were pre-selected, 
-      // prompt for post-selection
-
-      if( null == ids || 0 == ids.Count )
-      {
-        IList<Reference> refs = null;
-
-        try
-        {
-          refs = sel.PickObjects( ObjectType.Element,
-            "Please select elements for 2D outline generation." );
-        }
-        catch( Autodesk.Revit.Exceptions
-          .OperationCanceledException )
-        {
-          return ids;
-        }
-        ids = new List<ElementId>(
-          refs.Select<Reference, ElementId>(
-            r => r.ElementId ) );
-      }
-      return ids;
-    }
-
-    /// <summary>
-    /// Allow only room to be selected.
-    /// </summary>
-    class RoomSelectionFilter : ISelectionFilter
-    {
-      public bool AllowElement( Element e )
-      {
-        return e is Room;
-      }
-
-      public bool AllowReference( Reference r, XYZ p )
-      {
-        return true;
-      }
-    }
-
-    static public IEnumerable<ElementId> GetSelectedRooms(
-      UIDocument uidoc )
-    {
-      Document doc = uidoc.Document;
-
-      // Do we have any pre-selected elements?
-
-      Selection sel = uidoc.Selection;
-
-      IEnumerable<ElementId> ids = sel.GetElementIds()
-        .Where<ElementId>( id
-          => (doc.GetElement( id ) is Room) );
-
-      // If no elements were pre-selected, 
-      // prompt for post-selection
-
-      if( null == ids || 0 == ids.Count() )
-      {
-        IList<Reference> refs = null;
-
-        try
-        {
-          refs = sel.PickObjects( ObjectType.Element,
-            new RoomSelectionFilter(),
-            "Please select rooms for 2D outline generation." );
-        }
-        catch( Autodesk.Revit.Exceptions
-          .OperationCanceledException )
-        {
-          return ids;
-        }
-        ids = new List<ElementId>(
-          refs.Select<Reference, ElementId>(
-            r => r.ElementId ) );
-      }
-      return ids;
-    }
-    #endregion // Element pre- or post-selection
-
     public Result Execute(
       ExternalCommandData commandData,
       ref string message,
@@ -162,12 +91,14 @@ namespace GetElementImage
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
+      Element e;
 
-      // Access current selection
+      Result rc = GetSingleSelectedElement( 
+        uidoc, ref message, out e );
 
-      Selection sel = uidoc.Selection;
-
-      // Retrieve elements from database
+      if( Result.Succeeded == rc )
+      {
+      }
 
       FilteredElementCollector col
         = new FilteredElementCollector( doc )
@@ -175,20 +106,6 @@ namespace GetElementImage
           .OfCategory( BuiltInCategory.INVALID )
           .OfClass( typeof( Wall ) );
 
-      // Filtered element collector is iterable
-
-      foreach( Element e in col )
-      {
-        Debug.Print( e.Name );
-      }
-
-      // Modify document within a transaction
-
-      using( Transaction tx = new Transaction( doc ) )
-      {
-        tx.Start( "Transaction Name" );
-        tx.Commit();
-      }
 
       return Result.Succeeded;
     }
