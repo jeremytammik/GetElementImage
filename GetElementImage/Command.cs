@@ -90,21 +90,20 @@ namespace GetElementImage
 
       if( Result.Succeeded == rc )
       {
-        ImageExporter ie = new ImageExporter( doc );
-
-        foreach( ElementId id in ids )
+        using( Transaction tx = new Transaction( doc ) )
         {
-          Element e = doc.GetElement( id );
-          string filename = ie.ExportToImage( e );
+          tx.Start( "Export PNG Element Images" );
+
+          ImageExporter ie = new ImageExporter( doc );
+
+          foreach( ElementId id in ids )
+          {
+            Element e = doc.GetElement( id );
+            string filename = ie.ExportToImage( e );
+          }
+          tx.RollBack();
         }
       }
-
-      FilteredElementCollector col
-        = new FilteredElementCollector( doc )
-          .WhereElementIsNotElementType()
-          .OfCategory( BuiltInCategory.INVALID )
-          .OfClass( typeof( Wall ) );
-
       return rc;
     }
   }
