@@ -63,7 +63,7 @@ namespace GetElementImage
       // Hide all other elements in view
 
       View view = _views_to_export[ 0 ];
-      view.HideCategoriesTemporary( _category_ids_to_hide );
+
       List<ElementId> hideable_element_ids
         = new FilteredElementCollector( doc, view.Id )
           .Where<Element>( a => a.CanBeHidden( view ) )
@@ -71,13 +71,19 @@ namespace GetElementImage
           .ToList<ElementId>();
 
       view.HideElements( hideable_element_ids );
+
+      view.HideCategoriesTemporary( _category_ids_to_hide );
+
       List<ElementId> ids = new List<ElementId>( 1 );
       ids.Add( e.Id );
       view.UnhideElements( ids );
 
       doc.Regenerate();
 
-      var tempFileName = Path.ChangeExtension(
+      //string directory = Path.GetTempPath();
+      string directory = "C:/tmp";
+
+      string tempFileName = Path.ChangeExtension(
         Path.GetRandomFileName(), "png" );
 
       string tempImageFile;
@@ -85,7 +91,7 @@ namespace GetElementImage
       try
       {
         tempImageFile = Path.Combine(
-          Path.GetTempPath(), tempFileName );
+          directory, tempFileName );
       }
       catch( IOException )
       {
@@ -150,7 +156,7 @@ namespace GetElementImage
       // in views).
 
       var files = Directory.GetFiles(
-        Path.GetTempPath(),
+        directory,
         string.Format( "{0}*.*", Path
           .GetFileNameWithoutExtension(
             tempFileName ) ) );

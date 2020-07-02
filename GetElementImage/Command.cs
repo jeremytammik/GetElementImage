@@ -94,6 +94,11 @@ namespace GetElementImage
         {
           tx.Start( "Export PNG Element Images" );
 
+          // Clear selection to unhighlight elements
+
+          uidoc.Selection.SetElementIds(
+            new List<ElementId>() );
+
           ImageExporter ie = new ImageExporter( doc );
 
           foreach( ElementId id in ids )
