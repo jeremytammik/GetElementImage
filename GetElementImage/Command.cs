@@ -100,6 +100,7 @@ namespace GetElementImage
           {
             Element e = doc.GetElement( id );
             string filename = ie.ExportToImage( e );
+            Debug.Print( "{0}: {1}", e.Id, filename );
           }
           tx.RollBack();
         }
