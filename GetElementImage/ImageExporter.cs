@@ -10,8 +10,8 @@ namespace GetElementImage
 {
   class ImageExporter
   {
-    List<View> _views_to_export 
-      = new List<View>( 1 );
+    List<View> _views_to_export;
+    List<ElementId> _category_ids_to_hide;
 
     public ImageExporter( Document doc )
     {
@@ -29,6 +29,7 @@ namespace GetElementImage
 
       Debug.Assert( null != view3d );
 
+      _views_to_export = new List<View>( 1 );
       _views_to_export.Add( view3d );
 
       Parameter graphicDisplayOptions
@@ -38,23 +39,28 @@ namespace GetElementImage
       // Settings for best quality
 
       graphicDisplayOptions.Set( 6 );
+
+      // Get categories to hide
+
+      _category_ids_to_hide = new List<ElementId>( 2 );
+
+      Categories cats = doc.Settings.Categories;
+
+      _category_ids_to_hide.Add( cats.get_Item( 
+        BuiltInCategory.OST_Levels ).Id );
+
+      _category_ids_to_hide.Add( cats.get_Item( 
+        BuiltInCategory.OST_ProjectBasePoint ).Id );
     }
 
     public string ExportToImage( Element e )
     {
       Document doc = e.Document;
 
-      // Get categories to hide
-
-      List<ElementId> catids = new List<ElementId>( 2 );
-      Categories cats = doc.Settings.Categories;
-      catids.Add( cats.get_Item( BuiltInCategory.OST_Levels ).Id );
-      catids.Add( cats.get_Item( BuiltInCategory.OST_ProjectBasePoint ).Id );
-
       // Hide all other elements in view
 
       View view = _views_to_export[ 0 ];
-      view.HideCategoriesTemporary( catids );
+      view.HideCategoriesTemporary( _category_ids_to_hide );
       FilteredElementCollector visible_elements 
         = new FilteredElementCollector( doc, view.Id );
       view.HideElements( visible_elements.ToElementIds() );
