@@ -10,8 +10,8 @@ namespace GetElementImage
 {
   class ImageExporter
   {
-    List<ElementId> _views_to_export 
-      = new List<ElementId>( 1 );
+    List<View> _views_to_export 
+      = new List<View>( 1 );
 
     public ImageExporter( Document doc )
     {
@@ -29,7 +29,7 @@ namespace GetElementImage
 
       Debug.Assert( null != view3d );
 
-      _views_to_export.Add( view3d.Id );
+      _views_to_export.Add( view3d );
 
       Parameter graphicDisplayOptions
         = view3d.get_Parameter(
@@ -42,6 +42,18 @@ namespace GetElementImage
 
     public string ExportToImage( Element e )
     {
+      Document doc = e.Document;
+
+      // Hide all other elements in view
+
+      View view = _views_to_export[ 0 ];
+      FilteredElementCollector visible_elements = new FilteredElementCollector( doc, view.Id );
+      ICollection<ElementId> ids = visible_elements.ToElementIds();
+      view.HideElements( ids );
+      ids.Clear();
+      ids.Add( e.Id );
+      view.UnhideElements( ids );
+
       var tempFileName = Path.ChangeExtension(
         Path.GetRandomFileName(), "png" );
 
@@ -66,9 +78,15 @@ namespace GetElementImage
         ShouldCreateWebSite = false
       };
 
-      if( 0 < _views_to_export.Count )
+      int n = _views_to_export.Count;
+
+      if( 0 < n )
       {
-        ieo.SetViewsAndSheets( _views_to_export );
+        List<ElementId> ids2 = new List<ElementId>( 
+          _views_to_export.Select<View, ElementId>( 
+            v => v.Id ) );
+
+        ieo.SetViewsAndSheets( ids2 );
         ieo.ExportRange = ExportRange.SetOfViews;
       }
       else
@@ -90,7 +108,7 @@ namespace GetElementImage
 
         try
         {
-          e.Document.ExportImage( ieo );
+          doc.ExportImage( ieo );
         }
         catch
         {

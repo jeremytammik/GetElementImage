@@ -33,8 +33,8 @@ namespace GetElementImage
     }
 
     /// <summary>
-    /// Return a single preselected element
-    /// or prompt user to select one.
+    /// Return the preselected elements
+    /// or prompt user to select some.
     /// </summary>
     static Result GetSelectedElements(
       UIDocument uidoc,
