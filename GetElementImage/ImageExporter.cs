@@ -11,6 +11,11 @@ namespace GetElementImage
 {
   class ImageExporter
   {
+    /// <summary>
+    /// View directions to export
+    /// </summary>
+
+
     List<View> _views_to_export;
     //List<ElementId> _category_ids_to_hide;
 
@@ -39,10 +44,11 @@ namespace GetElementImage
       View3D view3d = View3D.CreateIsometric( 
         doc, viewFamilyType.Id );
 
+      view3d.Name = "Isometric";
+
       Debug.Assert( null != view3d );
 
-      _views_to_export = new List<View>( 1 );
-      _views_to_export.Add( view3d );
+      _views_to_export = new List<View>( 1 ) { view3d };
 
       Parameter graphicDisplayOptions
         = view3d.get_Parameter(
@@ -105,10 +111,8 @@ namespace GetElementImage
 
       //view.HideCategoriesTemporary( _category_ids_to_hide );
 
-      List<ElementId> ids = new List<ElementId>( 1 )
-      {
-        e.Id
-      };
+      List<ElementId> ids = new List<ElementId>( 1 ) { e.Id };
+
       view.UnhideElements( ids );
 
       doc.Regenerate();
