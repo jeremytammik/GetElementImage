@@ -19,9 +19,9 @@ namespace GetElementImage
     /// </summary>
     object[][] _view_data_to_export =
     {
-      new object[] { "Isometric", 1, 45, 35.264 }, // 35.264
-      new object[] { "North", 1.0, 0.0, 0.0 },
-      new object[] { "East", 1.0 90.0, 0.0 },
+      new object[] { "Isometric", 1, 45, 35 }, // 35.264
+      new object[] { "North", 1, 0, 0 },
+      new object[] { "East", 1, 90, 0 },
       new object[] { "Top", 1, 0, 90, 0 }
     };
 
@@ -114,7 +114,7 @@ namespace GetElementImage
 
         v.Name = d[ 0 ] as string;
         v.SetOrientation( GetOrientationFor( 
-          (double)(d[ 2 ]), (double) (d[ 3 ]) ) );
+          (int)(d[ 2 ]), (int) (d[ 3 ]) ) );
         v.SaveOrientation();
 
         _views_to_export.Add( v );
