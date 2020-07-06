@@ -168,7 +168,6 @@ namespace GetElementImage
 
       foreach( View v in _views_to_export )
       {
-
         List<ElementId> hideable_element_ids
           = new FilteredElementCollector( doc, v.Id )
             .Where<Element>( a => a.CanBeHidden( v ) )
@@ -201,11 +200,11 @@ namespace GetElementImage
 
       if( 0 < n )
       {
-        List<ElementId> ids2 = new List<ElementId>( 
+        List<ElementId> ids = new List<ElementId>( 
           _views_to_export.Select<View, ElementId>( 
             v => v.Id ) );
 
-        ieo.SetViewsAndSheets( ids2 );
+        ieo.SetViewsAndSheets( ids );
         ieo.ExportRange = ExportRange.SetOfViews;
       }
       else
