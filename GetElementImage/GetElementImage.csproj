@@ -55,6 +55,7 @@
     <Compile Include="ImageExporter.cs" />
     <Compile Include="FilteredElementCollectorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="GetElementImage.addin" />
