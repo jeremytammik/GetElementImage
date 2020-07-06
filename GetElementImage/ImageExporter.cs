@@ -12,7 +12,18 @@ namespace GetElementImage
   class ImageExporter
   {
     List<View> _views_to_export;
-    List<ElementId> _category_ids_to_hide;
+    //List<ElementId> _category_ids_to_hide;
+
+    /// <summary>
+    /// Categories to hide
+    /// </summary>
+    BuiltInCategory[] _categories_to_hide
+      = new BuiltInCategory[]
+    {
+      BuiltInCategory.OST_Cameras,
+      BuiltInCategory.OST_Levels,
+      BuiltInCategory.OST_ProjectBasePoint
+    };
 
     public ImageExporter( Document doc )
     {
@@ -43,18 +54,23 @@ namespace GetElementImage
 
       // Get categories to hide
 
-      _category_ids_to_hide = new List<ElementId>( 2 );
+      //_category_ids_to_hide = new List<ElementId>( 2 );
 
       Categories cats = doc.Settings.Categories;
 
       //_category_ids_to_hide.Add( cats.get_Item( // null object
       //  BuiltInCategory.OST_Cameras ).Id );
+      //_category_ids_to_hide.Add( cats.get_Item( 
+      //  BuiltInCategory.OST_Levels ).Id );
+      //_category_ids_to_hide.Add( cats.get_Item( 
+      //  BuiltInCategory.OST_ProjectBasePoint ).Id );
 
-      _category_ids_to_hide.Add( cats.get_Item( 
-        BuiltInCategory.OST_Levels ).Id );
+      foreach( BuiltInCategory bic in _categories_to_hide )
+      {
+        Category cat = cats.get_Item( bic );
+        view3d.SetCategoryHidden( cat.Id, true );
 
-      _category_ids_to_hide.Add( cats.get_Item( 
-        BuiltInCategory.OST_ProjectBasePoint ).Id );
+      }
     }
 
     public string ExportToImage( Element e )
@@ -73,7 +89,7 @@ namespace GetElementImage
 
       view.HideElements( hideable_element_ids );
 
-      view.HideCategoriesTemporary( _category_ids_to_hide );
+      //view.HideCategoriesTemporary( _category_ids_to_hide );
 
       List<ElementId> ids = new List<ElementId>( 1 );
       ids.Add( e.Id );
