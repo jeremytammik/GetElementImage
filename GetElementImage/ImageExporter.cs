@@ -19,9 +19,9 @@ namespace GetElementImage
     /// </summary>
     object[][] _view_data_to_export =
     {
-      new object[] { "Isometric", 1, 45, 35.264 },
-      new object[] { "North", 1, 0, 0 },
-      new object[] { "East", 1, 90, 0},
+      new object[] { "Isometric", 1, 45, 35.264 }, // 35.264
+      new object[] { "North", 1.0, 0.0, 0.0 },
+      new object[] { "East", 1.0 90.0, 0.0 },
       new object[] { "Top", 1, 0, 90, 0 }
     };
 
@@ -35,6 +35,7 @@ namespace GetElementImage
       = new BuiltInCategory[]
     {
       BuiltInCategory.OST_Cameras,
+      BuiltInCategory.OST_IOS_GeoSite,
       BuiltInCategory.OST_Levels,
       BuiltInCategory.OST_ProjectBasePoint
     };
@@ -54,7 +55,6 @@ namespace GetElementImage
 
       double angle_in_xy_plane = yaw_degrees * Math.PI / 180.0;
       double angle_up_down = pitch_degrees * Math.PI / 180.0;
-      //double radius = 1;
 
       // Eye position is arbitrary, since it is defined 
       // by fitting the view to the selected element
@@ -132,20 +132,14 @@ namespace GetElementImage
 
         // Get categories to hide
 
-        //_category_ids_to_hide = new List<ElementId>( 2 );
-
         Categories cats = doc.Settings.Categories;
-
-        //_category_ids_to_hide.Add( cats.get_Item( // null object
-        //  BuiltInCategory.OST_Cameras ).Id );
-        //_category_ids_to_hide.Add( cats.get_Item( 
-        //  BuiltInCategory.OST_Levels ).Id );
-        //_category_ids_to_hide.Add( cats.get_Item( 
-        //  BuiltInCategory.OST_ProjectBasePoint ).Id );
 
         foreach( BuiltInCategory bic in _categories_to_hide )
         {
           Category cat = cats.get_Item( bic );
+
+          // OST_Cameras returns a null Category 
+          // object in my model
 
           if( null == cat )
           {
@@ -166,7 +160,7 @@ namespace GetElementImage
       }
     }
 
-    public string ExportToImage( Element e )
+    public string[] ExportToImage( Element e )
     {
       Document doc = e.Document;
 
@@ -182,8 +176,6 @@ namespace GetElementImage
             .ToList<ElementId>();
 
         v.HideElements( hideable_element_ids );
-
-        //v.HideCategoriesTemporary( _category_ids_to_hide );
 
         List<ElementId> ids = new List<ElementId>( 1 ) { e.Id };
 
@@ -225,41 +217,25 @@ namespace GetElementImage
       ieo.ZoomType = ZoomFitType.FitToPage;
       ieo.ViewName = "tmp";
 
-      //if( ImageExportOptions.IsValidFileName(
-      //  tempImageFile ) )
+      try
       {
-        // If ExportRange = ExportRange.SetOfViews 
-        // and document is not active, then image 
-        // exports successfully, but throws
-        // Autodesk.Revit.Exceptions.InternalException
-
-        try
-        {
-          doc.ExportImage( ieo );
-        }
-        catch(Exception ex)
-        {
-          //return string.Empty;
-          Debug.Print( ex.Message );
-        }
+        doc.ExportImage( ieo );
       }
-      //else
-      //{
-      //  return string.Empty;
-      //}
+      catch(Exception ex)
+      {
+        Debug.Print( ex.Message );
+      }
 
       // File name has format like 
       // "tempFileName - view type - view name", e.g.
-      // "luccwjkz - 3D View - {3D}.png".
+      // "12345678 - 3D View - {3D}.png".
       // Get the first image (we only listed one view
       // in views).
 
       var files = Directory.GetFiles( 
         dir, $"{fn}*.*" );
 
-      return files.Length > 0
-        ? files[ 0 ]
-        : string.Empty;
+      return files;
     }
   }
 }

@@ -105,13 +105,13 @@ namespace GetElementImage
           {
             Element e = doc.GetElement( id );
 
-            string filepath = ie.ExportToImage( e );
+            string [] filepaths = ie.ExportToImage( e );
 
-            Debug.Print( "{0}: {1}", e.Id, filepath );
+            Debug.Print( "{0}: {1}", e.Id, filepaths );
 
-            if( 0 < filepath.Length )
+            foreach( string fp in filepaths )
             {
-              Process.Start( filepath );
+              Process.Start( fp );
             }
           }
           tx.RollBack();
