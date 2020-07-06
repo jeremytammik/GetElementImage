@@ -67,9 +67,17 @@ namespace GetElementImage
 
       foreach( BuiltInCategory bic in _categories_to_hide )
       {
-        Category cat = cats.get_Item( bic );
-        view3d.SetCategoryHidden( cat.Id, true );
-
+        //Category cat = cats.get_Item( bic );
+        //if( null == cat )
+        //{
+        //  Debug.Print( "{0} returns null category.", bic );
+        //}
+        //else
+        //{
+        //  view3d.SetCategoryHidden( cat.Id, true );
+        //}
+        ElementId id = new ElementId( bic );
+        view3d.SetCategoryHidden( id, true );
       }
     }
 
