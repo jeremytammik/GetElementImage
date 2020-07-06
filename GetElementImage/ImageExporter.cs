@@ -67,17 +67,23 @@ namespace GetElementImage
 
       foreach( BuiltInCategory bic in _categories_to_hide )
       {
-        //Category cat = cats.get_Item( bic );
-        //if( null == cat )
-        //{
-        //  Debug.Print( "{0} returns null category.", bic );
-        //}
-        //else
-        //{
-        //  view3d.SetCategoryHidden( cat.Id, true );
-        //}
-        ElementId id = new ElementId( bic );
-        view3d.SetCategoryHidden( id, true );
+        Category cat = cats.get_Item( bic );
+
+        if( null == cat )
+        {
+          Debug.Print( "{0} returns null category.", bic );
+        }
+        else
+        {
+          view3d.SetCategoryHidden( cat.Id, true );
+        }
+
+        // BuiltInCategory.OST_Cameras throws exception:
+        // Autodesk.Revit.Exceptions.ArgumentException
+        // Category cannot be hidden.
+        // Parameter name: categoryId
+        //ElementId id = new ElementId( bic );
+        //view3d.SetCategoryHidden( id, true );
       }
     }
 
@@ -99,8 +105,10 @@ namespace GetElementImage
 
       //view.HideCategoriesTemporary( _category_ids_to_hide );
 
-      List<ElementId> ids = new List<ElementId>( 1 );
-      ids.Add( e.Id );
+      List<ElementId> ids = new List<ElementId>( 1 )
+      {
+        e.Id
+      };
       view.UnhideElements( ids );
 
       doc.Regenerate();
