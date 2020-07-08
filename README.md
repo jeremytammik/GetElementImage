@@ -1,6 +1,6 @@
 # GetElementImage
 
-Revit C# .NET add-in that exports a PNG image of a selected BIM element with a specified rotation angle.
+Revit C# .NET add-in that exports a list of PNG images of a selected BIM element from a list of specified view angles.
 
 ## Task
 
