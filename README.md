@@ -36,7 +36,7 @@ We will explore option number 2, exporting the images directly from Revit.
 - Simpler to implement.
 - It will be merged into another system, that not necessarily will be web-based.
 
-Implementation:
+Usage:
 
 - Pick an element
 - Take a picture of it from multiple angles (sides, top, ...)
@@ -63,6 +63,21 @@ Another sample of `ExportImage` option settings is provided in the recent discus
 If the background is important, the discussion on [setting the view display background](https://thebuildingcoder.typepad.com/blog/2013/12/setting-the-view-display-background.html) addresses that aspect.
 
 [The Building Coder samples]() includes the `CmdExportImage` sample command that exports an image of a view.
+
+Current implementation:
+
+Currently, a single element is selected.
+
+Separate snapshots of it are exported to PNG bitmaps based on a pre-defined list of view directions.
+
+The views are created and set up from scratch in a transaction that is rolled back and aborted, so no modification is made to the model.
+
+That is very time-consuming.
+
+Possible enhancements:
+
+- Select more than one element to be exported
+- Set up all the required views once only and retain them in the model
 
 ## <a name="author"></a>Author
 
